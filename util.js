@@ -1,16 +1,30 @@
-function normalizeUrls(url,base){
+const { JSDOM } = require('jsdom');
+function normalizeUrls(url, base) {
 
     let tempUrl;
     try {
-        tempUrl=base ? new URL(url,base):new URL(url);
+        tempUrl = base ? new URL(url, base) : new URL(url);
     } catch (error) {
         throw new Error("Invalid URL provided");
     }
-const hostname=tempUrl.hostname.toLocaleLowerCase();
-const pathname=tempUrl.pathname=="/"?"":tempUrl.pathname;
+    const hostname = tempUrl.hostname.toLowerCase();
+    let pathname = tempUrl.pathname == "/" ? "" : tempUrl.pathname;
 
-return hostname+ pathname;
+    if (pathname.endsWith("/")) {
+        pathname = pathname.slice(0, -1);
+    }
+
+
+    return hostname + pathname;
 }
 
 
-module.exports=normalizeUrls;
+function extractURLsfromHTML(htmlBody) {
+    const dom = new JSDOM(htmlBody);
+    const anchorList = dom.window.document.querySelectorAll("a");
+    const links = Array.from(anchorList,a=>a.getAttribute("href")?.trim());
+    return links.filter(Boolean);
+}
+
+
+module.exports = {normalizeUrls,extractURLsfromHTML};
