@@ -1,5 +1,4 @@
-const { JSDOM } = require("jsdom");
-const { normalizeUrls, extractURLsfromHTML } = require("./util");
+import { normalizeUrls, extractURLsfromHTML } from "./util.js";
 describe("Testing normalization of URLS", () => {
     test("Remove protocol from url", () => {
         const url = "https://example.com";

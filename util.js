@@ -1,5 +1,5 @@
-const { JSDOM } = require('jsdom');
-function normalizeUrls(url, base) {
+import {JSDOM} from 'jsdom';
+export function normalizeUrls(url, base) {
 
     let tempUrl;
     try {
@@ -19,12 +19,9 @@ function normalizeUrls(url, base) {
 }
 
 
-function extractURLsfromHTML(htmlBody) {
+export function extractURLsfromHTML(htmlBody) {
     const dom = new JSDOM(htmlBody);
     const anchorList = dom.window.document.querySelectorAll("a");
     const links = Array.from(anchorList,a=>a.getAttribute("href")?.trim());
     return links.filter(Boolean);
 }
-
-
-module.exports = {normalizeUrls,extractURLsfromHTML};
