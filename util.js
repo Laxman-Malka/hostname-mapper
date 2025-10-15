@@ -19,9 +19,16 @@ export function normalizeUrls(url, base) {
 }
 
 
-export function extractURLsfromHTML(htmlBody) {
+export function extractURLsfromHTML(htmlBody,baseUrl) {
     const dom = new JSDOM(htmlBody);
     const anchorList = dom.window.document.querySelectorAll("a");
     const links = Array.from(anchorList,a=>a.getAttribute("href")?.trim());
+    for(let i=0;i<links.length;i++){
+        try{
+        links[i]=normalizeUrls(links[i]);
+        } catch(err){
+            links[i]=normalizeUrls(links[i],baseUrl);
+        }
+    }
     return links.filter(Boolean);
 }
