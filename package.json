@@ -2,8 +2,8 @@
   "name": "hostname-mapper",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "main.js",
+  "type": "commonjs",
+  "main": "src/main.js",
   "scripts": {
     "test": "jest",
     "start": "node ."

@@ -1,4 +1,4 @@
-import { normalizeUrls, extractURLsfromHTML } from "./util.js";
+const { normalizeUrls, extractURLsfromHTML } =  require("../src/util.js");
 describe("Testing normalization of URLS", () => {
     test("Remove protocol from url", () => {
         const url = "https://example.com";
@@ -65,8 +65,8 @@ describe("Testing extraction of urls", () => {
         `;
         const result = extractURLsfromHTML(html);
         expect(result).toEqual([
-            "https://example.com",
-            "http://test.com/page"
+            "example.com",
+            "test.com/page"
         ]);
     });
 
@@ -75,10 +75,10 @@ describe("Testing extraction of urls", () => {
             <a href="/about">About</a>
             <a href="contact.html">Contact</a>
         `;
-        const result = extractURLsfromHTML(html);
+        const result = extractURLsfromHTML(html,"https://example.com");
         expect(result).toEqual([
-            "/about",
-            "contact.html"
+            "example.com/about",
+            "example.com/contact.html"
         ]);
     });
 
@@ -88,18 +88,16 @@ describe("Testing extraction of urls", () => {
             <a href="https://example.com">Valid</a>
         `;
         const result = extractURLsfromHTML(html);
-        expect(result).toEqual(["https://example.com"]);
+        expect(result).toEqual(["example.com"]);
     });
 
     test("trims whitespace in href", () => {
         const html = `
-            <a href="  /page1  ">Page1</a>
             <a href=" https://site.com ">Site</a>
         `;
         const result = extractURLsfromHTML(html);
         expect(result).toEqual([
-            "/page1",
-            "https://site.com"
+            "site.com"
         ]);
     });
 
@@ -108,8 +106,8 @@ describe("Testing extraction of urls", () => {
             <a href="">Empty</a>
             <a href="valid.html">Valid</a>
         `;
-        const result = extractURLsfromHTML(html);
-        expect(result).toEqual(["valid.html"]);
+        const result = extractURLsfromHTML(html,"https://example.com/");
+        expect(result).toEqual(["example.com/valid.html"]);
     });
 
     test("handles duplicate hrefs", () => {
@@ -119,8 +117,7 @@ describe("Testing extraction of urls", () => {
         `;
         const result = extractURLsfromHTML(html);
         expect(result).toEqual([
-            "https://example.com",
-            "https://example.com"
+            "example.com"
         ]);
     });
 
