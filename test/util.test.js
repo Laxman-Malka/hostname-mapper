@@ -1,4 +1,4 @@
-const { normalizeUrls, extractURLsfromHTML } =  require("../src/util.js");
+const { normalizeUrls, extractURLsfromHTML } = require("../src/util.js");
 describe("Testing normalization of URLS", () => {
     test("Remove protocol from url", () => {
         const url = "https://example.com";
@@ -75,7 +75,7 @@ describe("Testing extraction of urls", () => {
             <a href="/about">About</a>
             <a href="contact.html">Contact</a>
         `;
-        const result = extractURLsfromHTML(html,"https://example.com");
+        const result = extractURLsfromHTML(html, "https://example.com");
         expect(result).toEqual([
             "example.com/about",
             "example.com/contact.html"
@@ -106,7 +106,7 @@ describe("Testing extraction of urls", () => {
             <a href="">Empty</a>
             <a href="valid.html">Valid</a>
         `;
-        const result = extractURLsfromHTML(html,"https://example.com/");
+        const result = extractURLsfromHTML(html, "https://example.com/");
         expect(result).toEqual(["example.com/valid.html"]);
     });
 
@@ -126,5 +126,22 @@ describe("Testing extraction of urls", () => {
         const result = extractURLsfromHTML(html);
         expect(result).toEqual([]);
     });
+
+    test("filter by protocol", () => {
+        const html = `
+        
+        <a href="https://example.com/ex" >ml</a>
+         <a href="http://example.com/ex" >ex</a>
+        <a href="mailto:ma@ex.com">mail</a>
+        `
+        const h = extractURLsfromHTML(html, undefined, "http:")
+        const hs = extractURLsfromHTML(html, undefined, "https:")
+        const m = extractURLsfromHTML(html, undefined, "mailto:")
+
+        expect(h).toEqual(["example.com/ex"])
+        expect(hs).toEqual(["example.com/ex"])
+        expect(m).toEqual(["ma@ex.com"]);
+
+    })
 
 });
