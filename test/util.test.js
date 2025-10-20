@@ -144,4 +144,25 @@ describe("Testing extraction of urls", () => {
 
     })
 
+    test("Filter by hostname and ignore www",()=>{
+       const html=  `
+        
+        <a href="https://example.com/ex" >ml</a>
+         <a href="http://eample.com/ex" >ex</a>
+        <a href="mailto:ma@ex.com">mail</a>
+        <a href="https://api.example.com/ex"</a>
+        <a href="https://www.kexample.com/ex"</a>
+        <a href="https://kexample.com/ex"</a>
+        `;
+        const h = extractURLsfromHTML(html,undefined,undefined,"example.com",true);
+        expect(h).toEqual(["example.com/ex"]);
+        const ht = extractURLsfromHTML(html,undefined,undefined,"kexample.com",true,true);
+        expect(ht.sort()).toEqual(["kexample.com/ex",
+            "www.kexample.com/ex"
+        ].sort());
+        const htt = extractURLsfromHTML(html,undefined,undefined,"kexample.com",true,false);
+        expect(htt).toEqual(["kexample.com/ex"
+        ]);
+    })
+
 });

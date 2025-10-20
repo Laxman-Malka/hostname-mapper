@@ -19,10 +19,9 @@ function normalizeUrls(url, base) {
 }
 
 
-function extractURLsfromHTML(htmlBody, baseUrl, outProtocol) {
+function extractURLsfromHTML(htmlBody, baseUrl, outProtocol, hostname, hostnameRestrict = false, ignoreWWW = false) {
     const dom = new JSDOM(htmlBody);
     const anchorList = dom.window.document.querySelectorAll("a");
-
     const linkSet = new Set();
 
     for (const a of anchorList) {
@@ -32,14 +31,23 @@ function extractURLsfromHTML(htmlBody, baseUrl, outProtocol) {
         try {
             const resolvedUrl = new URL(href, baseUrl);
 
-            if (outProtocol && resolvedUrl.protocol !== outProtocol) {
-                continue;
-            }else if(!outProtocol){
-                if (resolvedUrl.protocol !== 'http:' && resolvedUrl.protocol !== 'https:') {
-                    continue;
-                }
+            if (outProtocol) {
+                if (resolvedUrl.protocol !== outProtocol) continue;
+            } else {
+                if (resolvedUrl.protocol !== 'http:' && resolvedUrl.protocol !== 'https:') continue;
             }
+
+            if (hostnameRestrict) {
+                const targetHost = ignoreWWW ? hostname.replace(/^www\./, '') : hostname;
+                const urlHost = ignoreWWW ? resolvedUrl.hostname.replace(/^www\./, '') : resolvedUrl.hostname;
+
+                if (urlHost !== targetHost) continue;
+            }
+
             const normalizedUrl = normalizeUrls(resolvedUrl.href, baseUrl);
+            if(linkSet.has(normalizedUrl)){
+                console.log("Deduped ",normalizedUrl);
+            }
             linkSet.add(normalizedUrl);
 
         } catch (error) {
@@ -47,7 +55,9 @@ function extractURLsfromHTML(htmlBody, baseUrl, outProtocol) {
             continue;
         }
     }
+
     return Array.from(linkSet);
 }
+
 
 module.exports = { normalizeUrls, extractURLsfromHTML }
