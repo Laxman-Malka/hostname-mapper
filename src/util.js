@@ -45,9 +45,6 @@ function extractURLsfromHTML(htmlBody, baseUrl, outProtocol, hostname, hostnameR
             }
 
             const normalizedUrl = normalizeUrls(resolvedUrl.href, baseUrl);
-            if(linkSet.has(normalizedUrl)){
-                console.log("Deduped ",normalizedUrl);
-            }
             linkSet.add(normalizedUrl);
 
         } catch (error) {

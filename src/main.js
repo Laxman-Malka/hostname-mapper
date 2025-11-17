@@ -19,12 +19,12 @@ async function main() {
         const url = new URL(urlStr);
         let map;
         try {
-            map = await crawl(normalizeUrls(url.href), url.protocol,url.hostname);
+            map = await crawl(normalizeUrls(url.href), url.protocol, url.hostname);
         } catch (err) {
-            console.log("Error while crawling ",err);
-        }finally{
-                        console.log("Writing file");
-            fs.writeFileSync("Crawl.json", JSON.stringify(Object.fromEntries(map), null, 4), (err) => {
+            console.log("Error while crawling ", err);
+        } finally {
+            console.log("Writing file");
+            fs.writeFileSync(url.hostname + ".json", JSON.stringify(Object.fromEntries(map), null, 4), (err) => {
                 console.err("Failed to write file", err);
             })
         }

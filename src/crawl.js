@@ -35,7 +35,6 @@ async function crawl(currentUrl, protocol, hostname,sitemap = new Map()) {
         const fullUrl = protocol + "//" + curr;
         let response;
         try {
-
             response = await fetch(fullUrl);
         } catch (err) {
             console.log(`Fetch failed for ${fullUrl} \n error name ${err.name} reason ${err.message} continuing`);
