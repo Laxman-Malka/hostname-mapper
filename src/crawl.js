@@ -51,7 +51,7 @@ async function crawl(currentUrl, protocol, hostname,sitemap = new Map()) {
         }
 
         if (response.headers.get("Content-Type").includes("text/html")) {
-            const links = extractURLsfromHTML(await response.text(), fullUrl, protocol,hostname,true);
+            const links = extractURLsfromHTML(await response.text(), fullUrl, protocol,hostname);
             sitemap.get(curr).out += links.length;
             for (const link of (links ?? [])) {
                 if (sitemap.has(link)) {

@@ -37,12 +37,7 @@ function extractURLsfromHTML(htmlBody, baseUrl, outProtocol, hostname, hostnameR
                 if (resolvedUrl.protocol !== 'http:' && resolvedUrl.protocol !== 'https:') continue;
             }
 
-            if (hostnameRestrict) {
-                const targetHost = ignoreWWW ? hostname.replace(/^www\./, '') : hostname;
-                const urlHost = ignoreWWW ? resolvedUrl.hostname.replace(/^www\./, '') : resolvedUrl.hostname;
-
-                if (urlHost !== targetHost) continue;
-            }
+                if (hostname!== resolvedUrl.hostname) continue;
 
             const normalizedUrl = normalizeUrls(resolvedUrl.href, baseUrl);
             linkSet.add(normalizedUrl);
